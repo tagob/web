@@ -1,8 +1,11 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import { db } from '../config/database.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'riyadah_elite_fallback_secret';
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET || 'riyadah_elite_super_secret_key_2025';
 
 const authController = {
   // Register new user

@@ -1,12 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+dotenv.config();
+
+const supabaseUrl = process.env.SUPABASE_URL || 'https://zrwqpzvjjeunrccubgfd.supabase.co';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpyd3FwenZqamV1bnJjY3ViZ2ZkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0OTA1ODg0NiwiZXhwIjoyMDY0NjM0ODQ2fQ.gdMcK2TqZfKDs3ymtzGDiXhcB1n9B-QFN_z4zRPWgCM';
 
 // Allow server to start without Supabase credentials for initial setup
 let supabase = null;
 
-if (supabaseUrl && supabaseServiceKey && supabaseUrl !== 'https://your-project.supabase.co') {
+if (supabaseUrl && supabaseServiceKey) {
   try {
     supabase = createClient(supabaseUrl, supabaseServiceKey, {
       auth: {

@@ -1,22 +1,13 @@
 import express from 'express';
 import cors from 'cors';
-import { createClient } from '@supabase/supabase-js';
+import authRoutes from './routes/auth.js';
+import tournamentRoutes from './routes/tournaments.js';
+import rewardRoutes from './routes/rewards.js';
+import gameRoutes from './routes/games.js';
+import { db } from './config/database.js';
 
 const app = express();
 const PORT = 3000;
-
-// Hardcoded Supabase credentials
-const SUPABASE_URL = "https://zrwqpzvjjeunrccubgfd.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpyd3FwenZqamV1bnJjY3ViZ2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNTg4NDYsImV4cCI6MjA2NDYzNDg0Nn0.TRUoeIFoif4nct-zVd73KAsBazsv3qXDkqPqiHLQRnQ";
-const SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpyd3FwenZqamV1bnJjY3ViZ2ZkIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0OTA1ODg0NiwiZXhwIjoyMDY0NjM0ODQ2fQ.gdMcK2TqZfKDs3ymtzGDiXhcB1n9B-QFN_z4zRPWgCM";
-
-// Create Supabase client using service role key for server operations
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
-  }
-});
 
 // Middleware
 app.use(cors({
@@ -24,6 +15,12 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/tournaments', tournamentRoutes);
+app.use('/api/rewards', rewardRoutes);
+app.use('/api/games', gameRoutes);
 
 // Root route
 app.get('/', (req, res) => {
@@ -33,20 +30,7 @@ app.get('/', (req, res) => {
 // Test database connection
 async function testDatabaseConnection() {
   try {
-    const { data, error } = await supabase
-      .from('users')
-      .select('count')
-      .limit(1);
-    
-    if (error) {
-      console.error('❌ Database connection failed:', error.message);
-      return false;
-    }
-    
-    console.log('✅ Database connected successfully');
-    return true;
-  } catch (error) {
-    console.error('❌ Database connection failed:', error.message);
+    await db.testConnection();
     return false;
   }
 }
