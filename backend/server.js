@@ -31,7 +31,9 @@ app.get('/', (req, res) => {
 async function testDatabaseConnection() {
   try {
     await db.testConnection();
-    return false;
+    console.log("✅ Database connected successfully!");
+  } catch (err) {
+    console.error("❌ Database connection failed:", err);
   }
 }
 
